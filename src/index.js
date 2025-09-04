@@ -1,14 +1,15 @@
-// src/index.js
 require('dotenv').config();
 const express = require('express');
 const sequelize = require('./config/db');   // DB import
 const authRoutes = require('./routes/auth');
+const examRoutes = require('./routes/exam'); //new one//
 
-const app = express();   // पहले app declare करो
+const app = express();   
 app.use(express.json());
 
-// auth routes
+// routes
 app.use('/api/auth', authRoutes);
+app.use('/api/exams', examRoutes);  // 
 
 // test route
 app.get('/', (req, res) => {
