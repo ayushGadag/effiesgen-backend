@@ -1,4 +1,4 @@
-const Exam = require('../models/Exam');
+const Exam = require("../models/Exam");
 
 // Create Exam
 exports.createExam = async (req, res) => {
@@ -11,7 +11,7 @@ exports.createExam = async (req, res) => {
 };
 
 // Get all Exams
-exports.getExams = async (req, res) => {
+exports.getAllExams = async (req, res) => {
   try {
     const exams = await Exam.findAll();
     res.json(exams);
@@ -20,12 +20,17 @@ exports.getExams = async (req, res) => {
   }
 };
 
-// Delete Exam
-exports.deleteExam = async (req, res) => {
+// Get single Exam by ID
+exports.getExamById = async (req, res) => {
   try {
     const { id } = req.params;
-    await Exam.destroy({ where: { id } });
-    res.json({ message: "Exam deleted successfully" });
+    const exam = await Exam.findByPk(id);
+
+    if (!exam) {
+      return res.status(404).json({ message: "Exam not found" });
+    }
+
+    res.json(exam);
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
@@ -37,6 +42,17 @@ exports.updateExam = async (req, res) => {
     const { id } = req.params;
     await Exam.update(req.body, { where: { id } });
     res.json({ message: "Exam updated successfully" });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
+
+// Delete Exam
+exports.deleteExam = async (req, res) => {
+  try {
+    const { id } = req.params;
+    await Exam.destroy({ where: { id } });
+    res.json({ message: "Exam deleted successfully" });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
