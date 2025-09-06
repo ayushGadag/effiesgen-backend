@@ -1,14 +1,14 @@
 // src/config/db.js
-const { Sequelize } = require('sequelize');
-require('dotenv').config();
+const { Sequelize } = require("sequelize");
 
 const sequelize = new Sequelize(
-  process.env.DB_NAME,    // DB_NAME = effiesgen
-  process.env.DB_USER,    // DB_USER = root
-  process.env.DB_PASS,    // DB_PASS = तेरा mysql password
+  process.env.DB_NAME,    // effiesgen
+  process.env.DB_USER,    // root
+  process.env.DB_PASS,    // student123
   {
-    host: process.env.DB_HOST,   // localhost
-    dialect: 'mysql'
+    host: process.env.DB_HOST || "localhost", // अगर .env missing है तो default localhost
+    dialect: "mysql",
+    logging: false, // SQL queries console में spam नहीं करेंगी
   }
 );
 
