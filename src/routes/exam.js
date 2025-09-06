@@ -1,42 +1,18 @@
-const express = require("express");
-const router = express.Router();
-
-// Import exam controller functions
-const {
-  createExam,
-  getAllExams,
-  getExamById,
-  updateExam,
-  deleteExam
-} = require("../controllers/examController");
-
-// Import middlewares
+const router = require("express").Router();
 const auth = require("../middleware/auth");
 const role = require("../middleware/role");
+const c = require("../controllers/examController");
 
-/**
- * ================= ADMIN ONLY ROUTES =================
- * These routes can only be accessed by users with role = "admin"
- */
+// read (role-aware)
+router.get("/", auth, c.list);
+router.get("/conflicts", auth, c.conflicts);
+router.get("/:id", auth, c.getOne);
 
-// Create a new exam
-router.post("/", auth, role(["admin"]), createExam);
-
-// Update an existing exam
-router.put("/:id", auth, role(["admin"]), updateExam);
-
-// Delete an exam
-router.delete("/:id", auth, role(["admin"]), deleteExam);
-
-/**
- * ================= ADMIN + STUDENT ROUTES =================
- * Both "student" and "admin" users can view exams
- */
-
-// Get all exams
-router.get("/", auth, role(["student", "admin"]), getAllExams);
-
-// Get a single exam by ID
-router.get("/:id", auth, role(["student", "admin"]), getExamById);
+// write (ExamUnit only)
+router.post("/", auth, role(["ExamUnit"]), c.create);
+router.put("/:id", auth, role(["ExamUnit"]), c.update);
+router.delete("/:id", auth, role(["ExamUnit"]), c.remove);
+router.post("/:id/assign-invigilator", auth, role(["ExamUnit"]), c.assignInvigilator);
+router.post("/:id/students", auth, role(["ExamUnit"]), c.setStudents);
 
 module.exports = router;

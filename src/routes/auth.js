@@ -1,10 +1,9 @@
-// src/routes/auth.js
-const express = require('express');
-const router = express.Router();
-const { register, login } = require('../controllers/authController');
+const router = require("express").Router();
+const c = require("../controllers/authController");
+const auth = require("../middleware/auth");
 
-// routes
-router.post('/register', register);
-router.post('/login', login);
+router.post("/login", c.login);
+router.post("/logout", auth, c.logout);     // frontend token remove karega
+router.get("/profile", auth, c.getProfile);
 
 module.exports = router;

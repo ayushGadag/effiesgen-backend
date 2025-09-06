@@ -1,8 +1,8 @@
-// src/controllers/authController.js
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
 const { User } = require("../models");
 
+// Login
 exports.login = async (req, res) => {
   try {
     const { email, password } = req.body;
@@ -21,21 +21,25 @@ exports.login = async (req, res) => {
 
     res.json({ token, user });
   } catch (err) {
+    console.error(err);
     res.status(500).json({ msg: "Server error" });
   }
 };
 
+// Logout
 exports.logout = async (req, res) => {
-  res.json({ msg: "Logout successful" }); // frontend token हटा देगा
+  res.json({ msg: "Logout successful" });
 };
 
+// Profile
 exports.getProfile = async (req, res) => {
   try {
     const user = await User.findByPk(req.user.id, {
-      attributes: ["id", "name", "email", "role"]
+      attributes: ["id", "name", "email", "role"],
     });
     res.json(user);
   } catch (err) {
+    console.error(err);
     res.status(500).json({ msg: "Server error" });
   }
 };

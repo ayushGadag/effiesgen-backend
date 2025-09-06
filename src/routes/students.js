@@ -1,19 +1,10 @@
-const express = require('express');
-const router = express.Router();
-const studentController = require('../controllers/studentController');
-const auth = require('../middleware/auth');
-const role = require('../middleware/role');
+const router = require("express").Router();
+const auth = require("../middleware/auth");
+const role = require("../middleware/role");
+const c = require("../controllers/studentController");
 
-// Students list (any logged-in user)
-router.get('/', auth, studentController.getStudents);
-
-// Create student (admin only)
-router.post('/', auth, role(['admin']), studentController.createStudent);
-
-// Update student (admin only)
-router.put('/:id', auth, role(['admin']), studentController.updateStudent);
-
-// Delete student (admin only)
-router.delete('/:id', auth, role(['admin']), studentController.deleteStudent);
+// Only ExamUnit can manage students
+router.get("/", auth, role(["ExamUnit"]), c.getStudents);
+router.post("/", auth, role(["ExamUnit"]), c.addStudent);
 
 module.exports = router;

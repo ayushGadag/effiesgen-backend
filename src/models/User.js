@@ -1,52 +1,31 @@
 // src/models/User.js
 const { DataTypes } = require("sequelize");
-const bcrypt = require("bcryptjs");
 const sequelize = require("../config/db");
 
 const User = sequelize.define("User", {
-  id: {
-    type: DataTypes.INTEGER,
-    autoIncrement: true,
-    primaryKey: true,
-  },
-
   name: {
     type: DataTypes.STRING,
     allowNull: false,
+    validate: {
+      notEmpty: true, // खाली string allow नहीं होगा
+    },
   },
-
   email: {
     type: DataTypes.STRING,
     allowNull: false,
-    unique: true,
-    validate: { isEmail: true },
+    unique: true, // एक ही email दो बार नहीं होगा
+    validate: {
+      isEmail: true, // proper email format होना चाहिए
+    },
   },
-
   password: {
     type: DataTypes.STRING,
     allowNull: false,
   },
-
   role: {
-    type: DataTypes.ENUM("ExamUnit", "Student", "Invigilator"),
+    type: DataTypes.ENUM("ExamUnit", "Student", "Invigilator"), // roles fix
     allowNull: false,
-    defaultValue: "Student",
   },
-});
-
-// ✅ Password hashing hook
-User.beforeCreate(async (user) => {
-  if (user.password) {
-    const salt = await bcrypt.genSalt(10);
-    user.password = await bcrypt.hash(user.password, salt);
-  }
-});
-
-User.beforeUpdate(async (user) => {
-  if (user.changed("password")) {
-    const salt = await bcrypt.genSalt(10);
-    user.password = await bcrypt.hash(user.password, salt);
-  }
 });
 
 module.exports = User;

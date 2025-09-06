@@ -1,19 +1,13 @@
-const express = require('express');
-const router = express.Router();
-const invigilatorController = require('../controllers/invigilatorController');
-const auth = require('../middleware/auth');
-const role = require('../middleware/role');
+// src/routes/invigilators.js
+const router = require("express").Router();
+const auth = require("../middleware/auth");
+const role = require("../middleware/role");
+const c = require("../controllers/invigilatorController");
 
-// Invigilator list (any logged-in user)
-router.get('/', auth, invigilatorController.getInvigilators);
+// only ExamUnit can see all invigilators
+router.get("/", auth, role(["ExamUnit"]), c.getAll);
 
-// Create invigilator (admin only)
-router.post('/', auth, role(['admin']), invigilatorController.createInvigilator);
-
-// Update invigilator (admin only)
-router.put('/:id', auth, role(['admin']), invigilatorController.updateInvigilator);
-
-// Delete invigilator (admin only)
-router.delete('/:id', auth, role(['admin']), invigilatorController.deleteInvigilator);
+// Invigilator can see their own exams
+router.get("/my-exams", auth, role(["Invigilator"]), c.myExams);
 
 module.exports = router;

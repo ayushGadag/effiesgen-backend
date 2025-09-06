@@ -1,14 +1,13 @@
-// src/config/db.js
 const { Sequelize } = require("sequelize");
 
 const sequelize = new Sequelize(
-  process.env.DB_NAME,    // effiesgen
-  process.env.DB_USER,    // root
-  process.env.DB_PASS,    // student123
+  process.env.DB_NAME,
+  process.env.DB_USER,
+  process.env.DB_PASS,
   {
-    host: process.env.DB_HOST || "localhost", // अगर .env missing है तो default localhost
+    host: process.env.DB_HOST || "localhost",
     dialect: "mysql",
-    logging: false, // SQL queries console में spam नहीं करेंगी
+    logging: false,
   }
 );
 
